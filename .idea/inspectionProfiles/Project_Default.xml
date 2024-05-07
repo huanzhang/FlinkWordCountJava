@@ -1,0 +1,25 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="11">
+            <item index="0" class="java.lang.String" itemvalue="trpc" />
+            <item index="1" class="java.lang.String" itemvalue="open-server" />
+            <item index="2" class="java.lang.String" itemvalue="trpc-log-atta" />
+            <item index="3" class="java.lang.String" itemvalue="attaapi" />
+            <item index="4" class="java.lang.String" itemvalue="trpc-metrics-m007" />
+            <item index="5" class="java.lang.String" itemvalue="trpc-naming-polaris" />
+            <item index="6" class="java.lang.String" itemvalue="trpc-opentracing-tjg" />
+            <item index="7" class="java.lang.String" itemvalue="m007-metrics" />
+            <item index="8" class="java.lang.String" itemvalue="tjg-opentracing" />
+            <item index="9" class="java.lang.String" itemvalue="trpc-metrics-runtime" />
+            <item index="10" class="java.lang.String" itemvalue="tconf-python" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="SqlNoDataSourceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+  </profile>
+</component>

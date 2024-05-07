@@ -21,8 +21,15 @@ package com;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.ReduceFunction;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.configuration.ConfigConstants;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
+
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Paths;
+
 /**
  * Skeleton for a Flink Streaming Job.
  *
@@ -38,33 +45,32 @@ import org.apache.flink.util.Collector;
 public class StreamingJob {
 
 
-	public static void main(String[] args) throws Exception {
-		// set up the streaming execution environment
-		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-		env.readTextFile("E:\\Idea\\FlinkWordCountJava\\word.txt")
-				.flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
-					@Override
-					public void flatMap(String in, Collector<Tuple2<String, Integer>> out) throws Exception {
-						String[] words = in.split(" ");
-						for (String word : words) {
-							if (word.length() > 0) {
-								out.collect(new Tuple2<>(word, 1));
-							}
-						}
-					}
-				}).keyBy(0)
-				.reduce(new ReduceFunction<Tuple2<String, Integer>>() {
-					@Override
-					public Tuple2<String, Integer> reduce(Tuple2<String, Integer> v1, Tuple2<String, Integer> v2) throws Exception {
-						return new Tuple2<>(v1.f0, v1.f1 + v2.f1);
-					}
-				}).print();
-
-
-		// execute program
-		env.execute("Flink Streaming Java WordCount");
-	}
-
-
+    public static void main(String[] args) throws Exception {
+        // final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI();
+        URL resource = StreamingJob.class.getClassLoader().getResource("word.txt");
+        File file = Paths.get(resource.toURI()).toFile();
+        Configuration conf = new Configuration();
+        conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, true);
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
+        env.readTextFile(file.getAbsolutePath())
+            .flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
+                @Override
+                public void flatMap(String in, Collector<Tuple2<String, Integer>> out) throws Exception {
+                    String[] words = in.split(" ");
+                    for (String word : words) {
+                        if (word.length() > 0) {
+                            out.collect(new Tuple2<>(word, 1));
+                        }
+                    }
+                }
+            }).keyBy(0)
+            .reduce(new ReduceFunction<Tuple2<String, Integer>>() {
+                @Override
+                public Tuple2<String, Integer> reduce(Tuple2<String, Integer> v1, Tuple2<String, Integer> v2) throws Exception {
+                    return new Tuple2<>(v1.f0, v1.f1 + v2.f1);
+                }
+            }).print();
+        // execute program
+        env.execute("Flink Streaming Java WordCount");
+    }
 }
