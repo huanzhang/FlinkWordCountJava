@@ -46,13 +46,17 @@ public class StreamingJob {
 
 
     public static void main(String[] args) throws Exception {
-        // final StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI();
+        // 0. 创建集群环境
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        // 1. 创建本地环境
+        // Configuration conf = new Configuration();
+        // conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, true);
+        // StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
+        // 2. 读取文件内容
         URL resource = StreamingJob.class.getClassLoader().getResource("word.txt");
         File file = Paths.get(resource.toURI()).toFile();
-        Configuration conf = new Configuration();
-        conf.setBoolean(ConfigConstants.LOCAL_START_WEBSERVER, true);
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.createLocalEnvironmentWithWebUI(conf);
-        env.readTextFile(file.getAbsolutePath())
+        env.setParallelism(1)
+            .readTextFile(file.getAbsolutePath())
             .flatMap(new FlatMapFunction<String, Tuple2<String, Integer>>() {
                 @Override
                 public void flatMap(String in, Collector<Tuple2<String, Integer>> out) throws Exception {
